@@ -1,0 +1,16 @@
+<div class="container mx-auto px-4 mb-3">
+    <div class="flex flex-wrap">
+        <div class="w-full sm:w-1/2 px-2 mb-4 sm:mb-0">
+            <input #title
+                type="text" class="w-full border rounded-full px-3 py-2 outline-none" 
+                placeholder="Job Title" 
+                (input)="getJobByTitle(title.value)" >
+        </div>
+        <div class="w-full sm:w-1/2 px-2">
+            <input type="text" #location
+            class="w-full border rounded-full px-3 py-2 outline-none" 
+            placeholder="Location"
+            (input)="getJobByLocation(location.value)" >
+        </div>
+    </div>
+</div>
