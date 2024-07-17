@@ -11,11 +11,13 @@ import { CustomModalComponent } from '../../Shared/Modal/custom-modal.component'
 import { loadJobs } from '../../Shared/Store/Jobs/jobs.actions';
 import { JobsState } from '../../Shared/Store/Jobs/jobs.state';
 import { MoreLessDirective } from '../../Shared/Directives/more-less.directive';
+import { RemoveHyphen } from '../../Shared/Pipes/removeHyphen.pipe';
+import { CapitalizeFirstLetter } from '../../Shared/Pipes/CapitalizeFirstLetter.pipe';
 
 @Component({
   selector: 'displayJob',
   standalone: true,
-  imports: [CommonModule, CustomModalComponent, MoreLessDirective],
+  imports: [CommonModule, CustomModalComponent, MoreLessDirective, RemoveHyphen, CapitalizeFirstLetter],
   templateUrl: './display-job.component.html',
   styleUrl: './display-job.component.css'
 })
