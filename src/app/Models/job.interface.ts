@@ -4,5 +4,8 @@ export interface Job{
     description: string,
     date: string,
     company: string,
-    type: string
+    type: string,
+    responsibilities: String[],
+    requirements: String[]
+    skills: String[]
 }

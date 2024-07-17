@@ -1,0 +1,118 @@
+<!-- Job Detail Modal -->
+<div *ngIf="isVisible" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
+
+        <div class="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:justify-between items-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">About The Job: </h3>
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="closeModal()">
+                <span class="sr-only">Close</span>
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="px-4 py-5 sm:px-6">
+            <div class="mb-4">
+                <h4 class="text-lg font-semibold text-title">{{ job.title }}</h4>
+                <p class="text-gray-600">{{ job.company }}</p>
+            </div>
+            <div class="mb-4" *ngIf="job.requirements.length">
+                <h5 class="text-md font-semibold text-gray-800">Job Requirements:</h5>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li *ngFor="let requirement of job.requirements">{{ requirement }}</li>
+                </ul>
+            </div>
+            <div class="mb-4" *ngIf="job.responsibilities.length">
+                <h5 class="text-md font-semibold text-gray-800">Responsibilities:</h5>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li *ngFor="let responsibility of job.responsibilities">{{ responsibility }}</li>
+                </ul>
+            </div>
+            <div class="mb-4" *ngIf="job.skills">
+                <h5 class="text-md font-semibold text-gray-800">Skills:</h5>
+                <ul class="list-disc list-inside text-gray-700">
+                    <li *ngFor="let skill of job.skills">{{ skill }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+            <button type="button" (click)="openApplicationForm()"
+                class="w-full inline-flex justify-center rounded-full border shadow-sm px-4 py-2 bg-default text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">
+                Apply
+            </button>
+            <button type="button"
+                class="mt-3 w-full inline-flex justify-center rounded-full  shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm">
+                Save Job
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Application Form Modal -->
+<div *ngIf="OpenForm" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full md:max-w-3xl overflow-y-auto max-h-full">
+        <h2 class="text-2xl font-bold mb-4">Application Form</h2>
+        <form (ngSubmit)="submitApplicationForm()" #applicationForm [formGroup]="applicationData" >
+            <div class="grid grid-cols-2 gap-2">
+                <div class="mb-2">
+                    <label for="firstName" class="block text-gray-700">First Name</label>
+                    <input type="text" id="firstName" class="border rounded w-full py-1 px-2" required
+                        formControlName ="firstName" name="firstName">
+                </div>
+                <div class="mb-2">
+                    <label for="lastName" class="block text-gray-700">Last Name</label>
+                    <input type="text" id="lastName" class="border rounded w-full py-1 px-2" required
+                        formControlName = "lastName" name="lastName">
+                </div>
+                <div class="mb-2">
+                    <label for="email" class="block text-gray-700">Email</label>
+                    <input type="email" id="email" class="border rounded w-full py-1 px-2" required
+                        formControlName="email" name="email">
+                </div>
+                <div class="mb-2">
+                    <label for="phone" class="block text-gray-700">Phone</label>
+                    <input type="tel" id="phone" class="border rounded w-full py-1 px-2" required
+                        formControlName="phone" name="phone">
+                </div>
+                <div class="mb-2">
+                    <label for="country" class="block text-gray-700">Country</label>
+                    <input type="text" id="country" class="border rounded w-full py-1 px-2" required
+                        formControlName="country" name="country">
+                </div>
+                <div class="mb-2">
+                    <label for="education" class="block text-gray-700">Education</label>
+                    <input type="text" id="education" class="border rounded w-full py-1 px-2" required
+                        formControlName="education" name="education">
+                </div>
+                <div class="mb-2">
+                    <label for="currentPosition" class="block text-gray-700">Current Position</label>
+                    <input type="text" id="currentPosition" class="border rounded w-full py-1 px-2" required
+                        formControlName="currentPosition" name="currentPosition">
+                </div>
+                <div class="mb-2">
+                    <label for="company" class="block text-gray-700">Company</label>
+                    <input type="text" id="company" class="border rounded w-full py-1 px-2" required
+                        formControlName="company" name="company">
+                </div>
+                <div class="mb-2 col-span-2">
+                    <label for="cv" class="block text-gray-700">CV</label>
+                    <input type="file" id="cv" class="border rounded-full w-full py-1 px-2" required accept=".pdf,.doc,.docx">
+                </div>
+                <div class="mb-2 col-span-2">
+                    <label for="coverLetter" class="block text-gray-700">Cover Letter</label>
+                    <textarea id="coverLetter" class="border rounded w-full py-1 px-2" required
+                        formControlName = "coverLetter" name="coverLetter"></textarea>
+                </div>
+            </div>
+            <div class="flex justify-end mt-4">
+                <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-full" (click)="closeApplicationForm()">Cancel</button>
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-full ml-2">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+

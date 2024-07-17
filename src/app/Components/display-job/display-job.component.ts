@@ -6,13 +6,13 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { searchJob } from '../../Models/search.interface';
 import { Job } from '../../Models/job.interface';
+import { CustomModalComponent } from '../../Shared/Modal/custom-modal/custom-modal.component';
 
 
 @Component({
   selector: 'displayJob',
   standalone: true,
-  imports: [CommonModule],
-
+  imports: [CommonModule, CustomModalComponent],
   templateUrl: './display-job.component.html',
   styleUrl: './display-job.component.css'
 })
@@ -27,7 +27,8 @@ export class DisplayJobComponent {
   title$!: Observable<string>;
   location$!: Observable<string>;
   userSearch: boolean = false;
-
+  currentJob!: Job;
+  showModal: boolean = false;
 
   ngOnInit() {
     this.getAllJobs();
@@ -100,5 +101,11 @@ export class DisplayJobComponent {
     }
   }
 
-
+  getJobDetail(i: number){
+    this.currentJob = this.alljobs[i];
+    this.currentJob.responsibilities = ['First Responsibility', 'Second Responsibility', 'Third Responsibility'];
+    this.currentJob.requirements = ['First Requiremnet', 'Second Requiremnet', 'Third Requiremnet'];
+    this.currentJob.skills = ['First Skill', 'Second Skill', 'Third Skill'];
+    this.showModal = true;
+  }
 }
