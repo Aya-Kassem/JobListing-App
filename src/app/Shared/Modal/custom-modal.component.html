@@ -56,17 +56,17 @@
 <div *ngIf="OpenForm" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full md:max-w-3xl overflow-y-auto max-h-full">
         <h2 class="text-2xl font-bold mb-4">Application Form</h2>
-        <form (ngSubmit)="submitApplicationForm()" #applicationForm [formGroup]="applicationData" >
+        <form (ngSubmit)="submitApplicationForm()" [formGroup]="applicationForm">
             <div class="grid grid-cols-2 gap-2">
                 <div class="mb-2">
                     <label for="firstName" class="block text-gray-700">First Name</label>
                     <input type="text" id="firstName" class="border rounded w-full py-1 px-2" required
-                        formControlName ="firstName" name="firstName">
+                        formControlName="firstName" name="firstName">
                 </div>
                 <div class="mb-2">
                     <label for="lastName" class="block text-gray-700">Last Name</label>
                     <input type="text" id="lastName" class="border rounded w-full py-1 px-2" required
-                        formControlName = "lastName" name="lastName">
+                        formControlName="lastName" name="lastName">
                 </div>
                 <div class="mb-2">
                     <label for="email" class="block text-gray-700">Email</label>
@@ -100,19 +100,20 @@
                 </div>
                 <div class="mb-2 col-span-2">
                     <label for="cv" class="block text-gray-700">CV</label>
-                    <input type="file" id="cv" class="border rounded-full w-full py-1 px-2" required accept=".pdf,.doc,.docx">
+                    <input type="file" id="cv" class="border rounded w-full py-1 px-2" required
+                        accept=".pdf,.doc,.docx">
                 </div>
                 <div class="mb-2 col-span-2">
                     <label for="coverLetter" class="block text-gray-700">Cover Letter</label>
                     <textarea id="coverLetter" class="border rounded w-full py-1 px-2" required
-                        formControlName = "coverLetter" name="coverLetter"></textarea>
+                        formControlName="coverLetter" name="coverLetter"></textarea>
                 </div>
             </div>
             <div class="flex justify-end mt-4">
-                <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-full" (click)="closeApplicationForm()">Cancel</button>
-                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-full ml-2">Submit</button>
+                <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-full"
+                    (click)="closeApplicationForm()">Cancel</button>
+                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-full ml-2"  [disabled]="!applicationForm.valid">Submit</button>
             </div>
         </form>
     </div>
 </div>
-

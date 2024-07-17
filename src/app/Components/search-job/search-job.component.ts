@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { searchByLocation, searchByTitle } from '../../Store/Search/search.action';
+import { searchByLocation, searchByTitle } from '../../Shared/Store/Search/search.actions';
 
 @Component({
   selector: 'searchJob',

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+// display-job.component.ts
+import { Component, OnInit } from '@angular/core';
 import { GetAvailableJobsService } from '../../Services/get-available-jobs.service';
 import { CommonModule } from '@angular/common';
 import { SearchJobComponent } from '../search-job/search-job.component';
@@ -6,8 +7,9 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { searchJob } from '../../Models/search.interface';
 import { Job } from '../../Models/job.interface';
-import { CustomModalComponent } from '../../Shared/Modal/custom-modal/custom-modal.component';
-
+import { CustomModalComponent } from '../../Shared/Modal/custom-modal.component';
+import { loadJobs } from '../../Shared/Store/Jobs/jobs.actions';
+import { JobsState } from '../../Shared/Store/Jobs/jobs.state';
 
 @Component({
   selector: 'displayJob',
@@ -16,10 +18,11 @@ import { CustomModalComponent } from '../../Shared/Modal/custom-modal/custom-mod
   templateUrl: './display-job.component.html',
   styleUrl: './display-job.component.css'
 })
-export class DisplayJobComponent {
+export class DisplayJobComponent implements OnInit {
   constructor(
     private _GetAvailableJobsService: GetAvailableJobsService,
-    private _Store: Store<{ Title: string, Location: string }>) { }
+    private _Store: Store<{ Title: string, Location: string, Jobs: JobsState }>
+  ) { }
 
   alljobs: Job[] = [];
   displayedJobs: Job[] = [];
@@ -29,34 +32,49 @@ export class DisplayJobComponent {
   userSearch: boolean = false;
   currentJob!: Job;
   showModal: boolean = false;
+  jobsCount!: number;
+  searchResultCount!: number;
+
+  jobs$: Observable<Job[]> = this._Store.select(state => state.Jobs.jobs);
+  loading$: Observable<boolean> = this._Store.select(state => state.Jobs.loading);
+  error$: Observable<any> = this._Store.select(state => state.Jobs.Errortext);
 
   ngOnInit() {
-    this.getAllJobs();
     this.getUserInputForTitle();
     this.getUserInputForLocation();
+    this._Store.dispatch(loadJobs());
+
+    this.getAllJobs();
   }
 
   getAllJobs() {
-    this._GetAvailableJobsService.fetchAllJobs().subscribe((Jobs: Job[]) => {
-      this.alljobs = Jobs;
-      console.log(Jobs);
+    this.jobs$.subscribe(jobs => {
+      this.alljobs = jobs;
+      this.jobsCount = jobs.length;
       this.displayedJobs = this.alljobs.slice(0, 6);
-    })
+      this.jobsCount = this.jobsCount - 6;
+    });
   }
 
   loadMore() {
     if (!this.userSearch && this.alljobs.length > this.displayedJobs.length) {
-      this.displayedJobs = [...this.displayedJobs, ...this.alljobs.slice(6)];
+      this.displayedJobs = [...this.alljobs.slice(6)];
+      this.jobsCount = this.jobsCount > 6 ? this.jobsCount - 6 : 0;
     } else if (this.userSearch && this.searchResult.length > this.displayedJobs.length) {
-      this.displayedJobs = [...this.displayedJobs, ...this.searchResult.slice(6)];
+      this.displayedJobs = [...this.searchResult.slice(6)];
+      // this.searchResultCount = this.searchResultCount > 6 ? this.searchResultCount : 0;
     }
   }
 
   loadLess() {
+    this.jobsCount = this.alljobs.length - this.displayedJobs.length;
     if (!this.userSearch) {
       this.displayedJobs = this.alljobs.slice(0, 6);
+      this.jobsCount = this.alljobs.length - this.displayedJobs.length;
     } else {
+      // this.searchResultCount = this.searchResult.length - this.displayedJobs.length
       this.displayedJobs = this.searchResult.slice(0, 6);
+      // this.searchResultCount = this.searchResult.length - this.displayedJobs.length;
     }
   }
 
@@ -64,7 +82,7 @@ export class DisplayJobComponent {
     this.title$ = this._Store.select('Title');
     this.title$.subscribe((jobTitle) => {
       if (jobTitle != '') {
-        this.getJobBySearchParam({ title: jobTitle })
+        this.getJobBySearchParam({ title: jobTitle });
       } else {
         this.displayedJobs = this.alljobs.slice(0, 6);
         this.userSearch = false;
@@ -76,12 +94,12 @@ export class DisplayJobComponent {
     this.location$ = this._Store.select('Location');
     this.location$.subscribe((jobLocation) => {
       if (jobLocation != '') {
-        this.getJobBySearchParam({ location: jobLocation })
+        this.getJobBySearchParam({ location: jobLocation });
       } else {
         this.displayedJobs = this.alljobs.slice(0, 6);
         this.userSearch = false;
       }
-    })
+    });
   }
 
   getJobBySearchParam(searchParams: searchJob) {
@@ -89,22 +107,23 @@ export class DisplayJobComponent {
     let condition = (job: Job) => {
       let titleMatch = searchParams.title ? job.title.toLowerCase().includes(searchParams.title.toLowerCase()) : true;
       let locationMatch = searchParams.location ? job.location.toLowerCase().includes(searchParams.location.toLowerCase()) : true;
-      return titleMatch && locationMatch
-    }
+      return titleMatch && locationMatch;
+    };
     this.searchResults(condition);
   }
 
   searchResults(filterCondition: (job: Job) => boolean) {
     if (this.alljobs.length) {
       this.searchResult = this.alljobs.filter(filterCondition);
+      this.searchResultCount = this.searchResult.length;
       this.displayedJobs = this.searchResult;
     }
   }
 
-  getJobDetail(i: number){
+  getJobDetail(i: number) {
     this.currentJob = this.alljobs[i];
     this.currentJob.responsibilities = ['First Responsibility', 'Second Responsibility', 'Third Responsibility'];
-    this.currentJob.requirements = ['First Requiremnet', 'Second Requiremnet', 'Third Requiremnet'];
+    this.currentJob.requirements = ['First Requirement', 'Second Requirement', 'Third Requirement'];
     this.currentJob.skills = ['First Skill', 'Second Skill', 'Third Skill'];
     this.showModal = true;
   }

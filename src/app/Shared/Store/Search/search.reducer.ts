@@ -1,7 +1,7 @@
 
 // const initialState: searchJob = { title: '', location: '' };
 import { createReducer, on } from "@ngrx/store";
-import { searchByLocation, searchByTitle } from "./search.action";
+import { searchByLocation, searchByTitle } from "./search.actions";
 
 
 const initialTitle: string = '';

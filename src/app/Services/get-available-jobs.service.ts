@@ -9,6 +9,7 @@ import { Job } from '../Models/job.interface';
 export class GetAvailableJobsService {
 
   constructor(private _HttpClient: HttpClient) { }
+  wrongApi: string = 'https://api-next.jobsglobal.com:54902/api/v1/jobs/all?page=2';
   api: string = 'https://api-next.jobsglobal.com:54902/api/v1/jobs/all?pagination_type=paginate&per_page=11';
   fetchAllJobs(): Observable<Job[]> {
     return this._HttpClient.get<any>(this.api).pipe(
@@ -22,4 +23,5 @@ export class GetAvailableJobsService {
       })))
     );
   }
+
 }

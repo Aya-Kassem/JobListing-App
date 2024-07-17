@@ -4,10 +4,9 @@
 
     <!-- Display Jobs -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div *ngFor="let job of displayedJobs; let i = index" 
-            class="bg-white p-6 rounded-lg shadow-custom-light cursor-pointer" 
-            (click)="getJobDetail(i)">
-            
+        <div *ngFor="let job of displayedJobs; let i = index"
+            class="bg-white p-6 rounded-lg shadow-custom-light cursor-pointer" (click)="getJobDetail(i)">
+
             <h4 class="text-xl font-bold mb-2 text-title">{{ job.title }}</h4>
             <h5>{{ job.company }}</h5>
             <div class="flex items-center mb-1">
@@ -50,14 +49,14 @@
     <!-- Load More / Load Less buttons -->
     <div class="flex justify-center mt-4 space-x-4">
         <button
-            [ngClass]="{'bg-disableBtn text-disableBtn cursor-disableBtn' : (alljobs.length === displayedJobs.length || searchResult.length === displayedJobs.length)}"
+            [ngClass]="{'bg-disableBtn text-disableBtn cursor-disableBtn' : jobsCount === 0 || searchResultCount === 0 }"
             class="bg-default text-white font-bold py-2 px-4 rounded-full" (click)="loadMore()">
-            Load More
+            Next
         </button>
-        <button [ngClass]="{'bg-disableBtn text-disableBtn cursor-disableBtn' : displayedJobs.length === 6 }"
+        <button [ngClass]="{'bg-disableBtn text-disableBtn cursor-disableBtn' : jobsCount != 0 }"
             class="bg-default text-white font-bold py-2 px-4 rounded-full" (click)="loadLess()">
-            Load Less
+            Prev
         </button>
     </div>
-
+    <!-- <p *ngIf="errMsg | async">{{ errMsg | async }}</p> -->
 </div>

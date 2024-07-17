@@ -6,7 +6,9 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { searchByTitleReducer, searchByLocationReducer } from './Store/Search/search.reducer';
+import { searchByTitleReducer, searchByLocationReducer } from './Shared/Store/Search/search.reducer';
+import { JobsEffect } from './Shared/Store/Jobs/jobs.effects';
+import { jobsReducer } from './Shared/Store/Jobs/jobs.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -15,7 +17,8 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()), 
     provideStore({
       Title: searchByTitleReducer,
-      Location: searchByLocationReducer
+      Location: searchByLocationReducer,
+      Jobs: jobsReducer
     }), 
-    provideEffects()]
+    provideEffects(JobsEffect)]
 };

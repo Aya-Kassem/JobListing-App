@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Job } from '../../../Models/job.interface';
-import { FormControl, FormGroup, FormsModule, MinValidator, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Job } from '../../Models/job.interface';
+import { FormBuilder, FormControl, FormGroup, FormsModule, MinValidator, ReactiveFormsModule, Validators } from '@angular/forms';
 import { min } from 'rxjs';
 
 @Component({
@@ -15,11 +15,15 @@ export class CustomModalComponent {
   @Input() job!: Job;
   isVisible: boolean = false;
   OpenForm: boolean = false;
+  applicationForm!: FormGroup;
+  constructor(private _FormBuilder: FormBuilder) { }
 
   ngOnInit() {
     if (this.job.title != '') {
       this.openModal()
     }
+
+    this.createForm()
   }
 
   openModal() {
@@ -31,19 +35,20 @@ export class CustomModalComponent {
   }
 
 
-  applicationData = new FormGroup  ({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('',  [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    phone: new FormControl('',  [Validators.required, Validators.min(10)]),
-    country: new FormControl(''),
-    education: new FormControl(''),
-    currentPosition: new FormControl(''),
-    company: new FormControl(''),
-    cv: new FormControl(null),
-    coverLetter: new FormControl('')
-  });
-
+  createForm() {
+    this.applicationForm = this._FormBuilder.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      phone: ['', [Validators.required, Validators.min(10)]],
+      country: [''],
+      education: [''],
+      currentPosition: [''],
+      company: [''],
+      cv: [null],
+      coverLetter: ['']
+    })
+  }
 
   openApplicationForm() {
     this.isVisible = false;
@@ -54,9 +59,9 @@ export class CustomModalComponent {
     this.OpenForm = false;
   }
 
- 
+
   submitApplicationForm() {
-    console.log(this.applicationData);
+    console.log(this.applicationForm.value);
   }
 
 }
