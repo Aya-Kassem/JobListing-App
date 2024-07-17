@@ -21,12 +21,12 @@ export class DisplayJobComponent {
     private _GetAvailableJobsService: GetAvailableJobsService,
     private _Store: Store<{ Title: string, Location: string }>) { }
 
-  alljobs: any;
-  displayedJobs: any;
+  alljobs: Job[] = [];
+  displayedJobs: Job[] = [];
+  searchResult: Job[] = [];
   title$!: Observable<string>;
   location$!: Observable<string>;
   userSearch: boolean = false;
-  searchResult!: Job[];
 
 
   ngOnInit() {
@@ -36,9 +36,9 @@ export class DisplayJobComponent {
   }
 
   getAllJobs() {
-    this._GetAvailableJobsService.fetchAllJobs().subscribe((allJobs: Job[]) => {
-      this.alljobs = allJobs;
-      console.log(allJobs);
+    this._GetAvailableJobsService.fetchAllJobs().subscribe((Jobs: Job[]) => {
+      this.alljobs = Jobs;
+      console.log(Jobs);
       this.displayedJobs = this.alljobs.slice(0, 6);
     })
   }
@@ -62,26 +62,29 @@ export class DisplayJobComponent {
   getUserInputForTitle() {
     this.title$ = this._Store.select('Title');
     this.title$.subscribe((jobTitle) => {
-      this.getJobBySearchParam({ title: jobTitle })
+      if (jobTitle != '') {
+        this.getJobBySearchParam({ title: jobTitle })
+      } else {
+        this.displayedJobs = this.alljobs.slice(0, 6);
+        this.userSearch = false;
+      }
     });
   }
 
   getUserInputForLocation() {
     this.location$ = this._Store.select('Location');
     this.location$.subscribe((jobLocation) => {
-      this.getJobBySearchParam({ location: jobLocation })
+      if (jobLocation != '') {
+        this.getJobBySearchParam({ location: jobLocation })
+      } else {
+        this.displayedJobs = this.alljobs.slice(0, 6);
+        this.userSearch = false;
+      }
     })
   }
 
   getJobBySearchParam(searchParams: searchJob) {
     this.userSearch = true;
-    // if(searchParams.title != '' && searchParams.location != ''){
-    //   console.log('dddddd');
-    // }else{
-    //   console.log('sssssss');
-    //   this.userSearch = false;
-    // }
-
     let condition = (job: Job) => {
       let titleMatch = searchParams.title ? job.title.toLowerCase().includes(searchParams.title.toLowerCase()) : true;
       let locationMatch = searchParams.location ? job.location.toLowerCase().includes(searchParams.location.toLowerCase()) : true;
@@ -96,5 +99,6 @@ export class DisplayJobComponent {
       this.displayedJobs = this.searchResult;
     }
   }
+
 
 }

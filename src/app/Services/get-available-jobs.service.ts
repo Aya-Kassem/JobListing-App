@@ -14,7 +14,6 @@ export class GetAvailableJobsService {
 
   apiUrl: string = 'https://api-next.jobsglobal.com:54902/api/v1/jobs/all?pagination_type=paginate&per_page=11';
   fetchAllJobs(): Observable<Job[]> {
-    // return this._HttpClient.get(this.apiUrl)
     return this._HttpClient.get<any>(this.apiUrl).pipe(
       map(response => response.data.map((item: any) => ({
         title: item.title,
