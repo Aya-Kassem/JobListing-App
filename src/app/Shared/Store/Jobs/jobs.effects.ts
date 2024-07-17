@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { GetAvailableJobsService } from "../../../Services/get-available-jobs.service";
-import { LOAD_JOBS, loadJobsFailed, loadJobsSuccess } from "./jobs.actions";
+import { loadJobsFailed, loadJobsSuccess } from "./jobs.actions";
 import { catchError, exhaustMap, map, of } from "rxjs";
 
 @Injectable()
@@ -10,7 +10,7 @@ export class JobsEffect {
 
     loadJobs$ = createEffect(() =>
         this._Actions.pipe(
-            ofType(LOAD_JOBS),
+            ofType('[jobs page] load jobs'),
             exhaustMap(() =>
                 this._GetAvailableJobsService.fetchAllJobs().pipe(
                     map(jobs => loadJobsSuccess({ jobs })),

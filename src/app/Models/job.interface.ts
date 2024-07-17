@@ -7,5 +7,6 @@ export interface Job{
     type: string,
     responsibilities: String[],
     requirements: String[]
-    skills: String[]
+    skills: String[],
+    incremental_id: number
 }

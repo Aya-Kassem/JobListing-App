@@ -10,11 +10,12 @@ import { Job } from '../../Models/job.interface';
 import { CustomModalComponent } from '../../Shared/Modal/custom-modal.component';
 import { loadJobs } from '../../Shared/Store/Jobs/jobs.actions';
 import { JobsState } from '../../Shared/Store/Jobs/jobs.state';
+import { MoreLessDirective } from '../../Shared/Directives/more-less.directive';
 
 @Component({
   selector: 'displayJob',
   standalone: true,
-  imports: [CommonModule, CustomModalComponent],
+  imports: [CommonModule, CustomModalComponent, MoreLessDirective],
   templateUrl: './display-job.component.html',
   styleUrl: './display-job.component.css'
 })
@@ -48,7 +49,7 @@ export class DisplayJobComponent implements OnInit {
   }
 
   getAllJobs() {
-    this.jobs$.subscribe(jobs => {
+    this.jobs$.subscribe(jobs => {      
       this.alljobs = jobs;
       this.jobsCount = jobs.length;
       this.displayedJobs = this.alljobs.slice(0, 6);
@@ -120,11 +121,20 @@ export class DisplayJobComponent implements OnInit {
     }
   }
 
+  // Dummy Data For Job Details Part ...
   getJobDetail(i: number) {
     this.currentJob = this.alljobs[i];
-    this.currentJob.responsibilities = ['First Responsibility', 'Second Responsibility', 'Third Responsibility'];
-    this.currentJob.requirements = ['First Requirement', 'Second Requirement', 'Third Requirement'];
-    this.currentJob.skills = ['First Skill', 'Second Skill', 'Third Skill'];
+    this.currentJob = {
+      ...this.currentJob,
+      responsibilities : ['First Responsibility', 'Second Responsibility', 'Third Responsibility'],
+      requirements : ['First Requirement', 'Second Requirement', 'Third Requirement'],
+      skills : ['First Skill', 'Second Skill', 'Third Skill']
+    }
+
     this.showModal = true;
+  }
+
+  closeModal(): void {
+    this.showModal = false;
   }
 }

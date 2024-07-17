@@ -13,13 +13,14 @@ export class GetAvailableJobsService {
   api: string = 'https://api-next.jobsglobal.com:54902/api/v1/jobs/all?pagination_type=paginate&per_page=11';
   fetchAllJobs(): Observable<Job[]> {
     return this._HttpClient.get<any>(this.api).pipe(
-      map(response => response.data.map((item: any) => ({
-        title: item.title,
-        location: item.page.location.country_and_city,
-        date: item.date_published,
-        type: item.type,
-        description: JSON.parse(item.work_space_meta_data).job_group_name,
-        company: item.page.name
+      map(response => response.data.map((job: any) => ({
+        title: job.title,
+        location: job.page.location.country_and_city,
+        date: job.date_published,
+        type: job.type,
+        description: JSON.parse(job.work_space_meta_data).job_group_name,
+        company: job.page.name,
+        incremental_id: job.incremental_id
       })))
     );
   }

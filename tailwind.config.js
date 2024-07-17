@@ -20,9 +20,15 @@ module.exports = {
       },
       cursor: {
         'disableBtn': 'not-allowed'
+      },
+      borderColor: {
+        'cancelBtn': '#987070'
+      },
+      fontWeight: {
+        'errMsg': '500'
       }
     },
   },
-  plugins: [],
+plugins: [],
 }
 

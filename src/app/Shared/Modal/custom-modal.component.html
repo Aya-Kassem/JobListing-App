@@ -1,7 +1,7 @@
 <!-- Job Detail Modal -->
 <div *ngIf="isVisible" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
     <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full">
-
+        <!-- Job Details Header -->
         <div class="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:justify-between items-center">
             <h3 class="text-lg leading-6 font-medium text-gray-900">About The Job: </h3>
             <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none" (click)="closeModal()">
@@ -12,32 +12,32 @@
                 </svg>
             </button>
         </div>
-
+        <!-- Job Details Body -->
         <div class="px-4 py-5 sm:px-6">
             <div class="mb-4">
-                <h4 class="text-lg font-semibold text-title">{{ job.title }}</h4>
-                <p class="text-gray-600">{{ job.company }}</p>
+                <h4 class="text-lg font-semibold text-title">{{ job?.title }}</h4>
+                <p class="text-gray-600">{{ job?.company }}</p>
             </div>
-            <div class="mb-4" *ngIf="job.requirements.length">
+            <div class="mb-4" *ngIf="job?.requirements?.length">
                 <h5 class="text-md font-semibold text-gray-800">Job Requirements:</h5>
                 <ul class="list-disc list-inside text-gray-700">
-                    <li *ngFor="let requirement of job.requirements">{{ requirement }}</li>
+                    <li *ngFor="let requirement of job?.requirements">{{ requirement }}</li>
                 </ul>
             </div>
-            <div class="mb-4" *ngIf="job.responsibilities.length">
+            <div class="mb-4" *ngIf="job?.responsibilities?.length">
                 <h5 class="text-md font-semibold text-gray-800">Responsibilities:</h5>
                 <ul class="list-disc list-inside text-gray-700">
-                    <li *ngFor="let responsibility of job.responsibilities">{{ responsibility }}</li>
+                    <li *ngFor="let responsibility of job?.responsibilities">{{ responsibility }}</li>
                 </ul>
             </div>
-            <div class="mb-4" *ngIf="job.skills">
+            <div class="mb-4" *ngIf="job?.skills">
                 <h5 class="text-md font-semibold text-gray-800">Skills:</h5>
                 <ul class="list-disc list-inside text-gray-700">
-                    <li *ngFor="let skill of job.skills">{{ skill }}</li>
+                    <li *ngFor="let skill of job?.skills">{{ skill }}</li>
                 </ul>
             </div>
         </div>
-
+        <!-- Job Details Footer -->
         <div class="bg-gray-100 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button type="button" (click)="openApplicationForm()"
                 class="w-full inline-flex justify-center rounded-full border shadow-sm px-4 py-2 bg-default text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm">
@@ -51,68 +51,127 @@
     </div>
 </div>
 
-
 <!-- Application Form Modal -->
-<div *ngIf="OpenForm" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+<div *ngIf="OpenForm"  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-white p-6 rounded-lg shadow-lg w-full md:max-w-3xl overflow-y-auto max-h-full">
-        <h2 class="text-2xl font-bold mb-4">Application Form</h2>
+        <h2 class="text-2xl text-title mb-4 font-bold">Application Form </h2>
         <form (ngSubmit)="submitApplicationForm()" [formGroup]="applicationForm">
             <div class="grid grid-cols-2 gap-2">
+                <!-- First Name -->
                 <div class="mb-2">
-                    <label for="firstName" class="block text-gray-700">First Name</label>
-                    <input type="text" id="firstName" class="border rounded w-full py-1 px-2" required
-                        formControlName="firstName" name="firstName">
+                    <label for="firstName" class="block text-gray-700">First Name </label>
+                    <input type="text" id="firstName" class="border rounded w-full py-1 px-2 focus:outline-none"
+                        required formControlName="firstName" name="firstName">
+                    <span class="text-icon font-errMsg" *ngIf="applicationForm.get('firstName')?.errors != null && 
+                            applicationForm.get('firstName')?.touched">
+                        First Name Is Required</span>
                 </div>
+
+                <!-- Last Name -->
                 <div class="mb-2">
                     <label for="lastName" class="block text-gray-700">Last Name</label>
-                    <input type="text" id="lastName" class="border rounded w-full py-1 px-2" required
+                    <input type="text" id="lastName" class="border rounded w-full py-1 px-2 focus:outline-none" required
                         formControlName="lastName" name="lastName">
+                    <span class="text-icon font-errMsg" *ngIf="applicationForm.get('lastName')?.errors != null && 
+                    applicationForm.get('lastName')?.touched">Last Name Is Required</span>
                 </div>
+
+                <!-- Email -->
                 <div class="mb-2">
                     <label for="email" class="block text-gray-700">Email</label>
-                    <input type="email" id="email" class="border rounded w-full py-1 px-2" required
+                    <input type="email" id="email" class="border rounded w-full py-1 px-2 focus:outline-none" required
                         formControlName="email" name="email">
+
+                    <!-- Email Validation -->
+                    <div *ngIf="applicationForm.get('email')?.errors && applicationForm.get('email')?.touched">
+                        <span class="text-icon font-errMsg"
+                            *ngIf="applicationForm.get('email')?.errors?.['required']">Email Is Required</span>
+                        <span class="text-icon font-errMsg" *ngIf="applicationForm.get('email')?.errors?.['email']">
+                            Please Enter Valid Email</span>
+                    </div>
                 </div>
+
+                <!-- Phone Number -->
                 <div class="mb-2">
                     <label for="phone" class="block text-gray-700">Phone</label>
-                    <input type="tel" id="phone" class="border rounded w-full py-1 px-2" required
+                    <input type="tel" id="phone" class="border rounded w-full py-1 px-2 focus:outline-none" required
                         formControlName="phone" name="phone">
+                    <!-- Phone Number Validation -->
+                    <div *ngIf="applicationForm.get('phone')?.errors && applicationForm.get('phone')?.touched">
+                        <span class="text-icon font-errMsg"
+                            *ngIf="applicationForm.get('phone')?.errors?.['required']">Phone is Required</span>
+                        <span class="text-icon font-errMsg"
+                            *ngIf="applicationForm.get('phone')?.errors?.['invalidPhoneNumber']">Enter a Valid Phone
+                            Number 11-digit</span>
+                    </div>
                 </div>
+
+                <!-- Country -->
                 <div class="mb-2">
                     <label for="country" class="block text-gray-700">Country</label>
-                    <input type="text" id="country" class="border rounded w-full py-1 px-2" required
+                    <input type="text" id="country" class="border rounded w-full py-1 px-2 focus:outline-none" required
                         formControlName="country" name="country">
+                    <span class="text-icon font-errMsg"
+                        *ngIf="applicationForm.get('country')?.errors?.['required'] && applicationForm.get('country')?.touched">Country
+                        Name Is Required</span>
                 </div>
+
+                <!-- Education -->
                 <div class="mb-2">
                     <label for="education" class="block text-gray-700">Education</label>
-                    <input type="text" id="education" class="border rounded w-full py-1 px-2" required
-                        formControlName="education" name="education">
+                    <input type="text" id="education" class="border rounded w-full py-1 px-2 focus:outline-none"
+                        required formControlName="education" name="education">
+                    <span class="text-icon font-errMsg"
+                        *ngIf="applicationForm.get('education')?.errors?.['required'] && applicationForm.get('education')?.touched  ">Your
+                        Education Is Required</span>
                 </div>
+
+                <!-- Current Position -->
                 <div class="mb-2">
                     <label for="currentPosition" class="block text-gray-700">Current Position</label>
-                    <input type="text" id="currentPosition" class="border rounded w-full py-1 px-2" required
-                        formControlName="currentPosition" name="currentPosition">
+                    <input type="text" id="currentPosition" class="border rounded w-full py-1 px-2 focus:outline-none"
+                        required formControlName="currentPosition" name="currentPosition">
+                    <span class="text-icon font-errMsg"
+                        *ngIf="applicationForm.get('currentPosition')?.errors?.['required'] && applicationForm.get('currentPosition')?.touched ">Your
+                        Current Position Is Required</span>
                 </div>
+
+                <!-- Company -->
                 <div class="mb-2">
                     <label for="company" class="block text-gray-700">Company</label>
-                    <input type="text" id="company" class="border rounded w-full py-1 px-2" required
+                    <input type="text" id="company" class="border rounded w-full py-1 px-2 focus:outline-none" required
                         formControlName="company" name="company">
+                    <span class="text-icon font-errMsg"
+                        *ngIf="applicationForm.get('company')?.errors?.['required'] && applicationForm.get('company')?.touched ">Company
+                        Name Is Required</span>
                 </div>
+
+                <!-- CV -->
                 <div class="mb-2 col-span-2">
                     <label for="cv" class="block text-gray-700">CV</label>
-                    <input type="file" id="cv" class="border rounded w-full py-1 px-2" required
-                        accept=".pdf,.doc,.docx">
+                    <input type="file" id="cv" class="border rounded w-full py-1 px-2 focus:outline-none" required
+                        accept=".pdf,.doc,.docx" formControlName="cv" (change)="onFileSelected($event)">
+                    <span class="text-icon font-bold"
+                        *ngIf="applicationForm.get('cv')?.errors?.['required'] && applicationForm.get('cv')?.touched ">Please
+                        Upload Your CV</span>
+                    <span class="text-icon font-errMsg" *ngIf="cvExceedLimit">Your CV Exceeded the Limit Size 3MB</span>
                 </div>
+
+                <!-- Cover Letter -->
                 <div class="mb-2 col-span-2">
                     <label for="coverLetter" class="block text-gray-700">Cover Letter</label>
-                    <textarea id="coverLetter" class="border rounded w-full py-1 px-2" required
+                    <textarea id="coverLetter" class="border rounded w-full py-1 px-2 focus:outline-none"
                         formControlName="coverLetter" name="coverLetter"></textarea>
+
+                    <span class="text-icon font-bold"
+                    *ngIf="applicationForm.get('coverLetter')?.errors?.['invalidLength']">Your Cover Letter is Too Long! Only 100 Word Allowed</span>
                 </div>
             </div>
+
             <div class="flex justify-end mt-4">
-                <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-full"
+                <button type="button" class="border-cancelBtn text-title border py-1 px-5 rounded-full"
                     (click)="closeApplicationForm()">Cancel</button>
-                <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-full ml-2"  [disabled]="!applicationForm.valid">Submit</button>
+                <button [disabled]="!applicationForm.valid" type="submit" class="bg-default  text-white py-1 px-5 rounded-full ml-2">Submit</button>
             </div>
         </form>
     </div>
