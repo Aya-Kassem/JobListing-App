@@ -9,6 +9,8 @@ import { provideEffects } from '@ngrx/effects';
 import { searchByTitleReducer, searchByLocationReducer } from './Shared/Store/Search/search.reducer';
 import { JobsEffect } from './Shared/Store/Jobs/jobs.effects';
 import { jobsReducer } from './Shared/Store/Jobs/jobs.reducer';
+import { appliedJobsReducer } from './Shared/Store/AppliedJobs/appliedJobs.reducer';
+import { ApplyingJobsEffects } from './Shared/Store/AppliedJobs/appliedJobs.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,7 +20,8 @@ export const appConfig: ApplicationConfig = {
     provideStore({
       Title: searchByTitleReducer,
       Location: searchByLocationReducer,
-      Jobs: jobsReducer
+      Jobs: jobsReducer,
+      AppliedJobs: appliedJobsReducer
     }), 
-    provideEffects(JobsEffect)]
+    provideEffects(JobsEffect, ApplyingJobsEffects)]
 };

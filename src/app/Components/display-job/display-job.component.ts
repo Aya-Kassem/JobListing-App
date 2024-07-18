@@ -1,8 +1,6 @@
 // display-job.component.ts
 import { Component, OnInit } from '@angular/core';
-import { GetAvailableJobsService } from '../../Services/get-available-jobs.service';
-import { CommonModule } from '@angular/common';
-import { SearchJobComponent } from '../search-job/search-job.component';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { searchJob } from '../../Models/search.interface';
@@ -17,13 +15,18 @@ import { CapitalizeFirstLetter } from '../../Shared/Pipes/CapitalizeFirstLetter.
 @Component({
   selector: 'displayJob',
   standalone: true,
-  imports: [CommonModule, CustomModalComponent, MoreLessDirective, RemoveHyphen, CapitalizeFirstLetter],
+  imports: [
+    CommonModule, 
+    CustomModalComponent, 
+    MoreLessDirective, 
+    RemoveHyphen, 
+    CapitalizeFirstLetter, 
+    DatePipe],
   templateUrl: './display-job.component.html',
   styleUrl: './display-job.component.css'
 })
 export class DisplayJobComponent implements OnInit {
   constructor(
-    private _GetAvailableJobsService: GetAvailableJobsService,
     private _Store: Store<{ Title: string, Location: string, Jobs: JobsState }>
   ) { }
 
@@ -51,7 +54,9 @@ export class DisplayJobComponent implements OnInit {
   }
 
   getAllJobs() {
-    this.jobs$.subscribe(jobs => {      
+    this.jobs$.subscribe(jobs => {   
+      console.log(jobs);
+         
       this.alljobs = jobs;
       this.jobsCount = jobs.length;
       this.displayedJobs = this.alljobs.slice(0, 6);
@@ -63,9 +68,9 @@ export class DisplayJobComponent implements OnInit {
     if (!this.userSearch && this.alljobs.length > this.displayedJobs.length) {
       this.displayedJobs = [...this.alljobs.slice(6)];
       this.jobsCount = this.jobsCount > 6 ? this.jobsCount - 6 : 0;
-    } else if (this.userSearch && this.searchResult.length > this.displayedJobs.length) {
-      this.displayedJobs = [...this.searchResult.slice(6)];
-      // this.searchResultCount = this.searchResultCount > 6 ? this.searchResultCount : 0;
+    } else if (this.userSearch && this.searchResultCount > this.displayedJobs.length) {
+      this.displayedJobs = [...this.displayedJobs.slice(6)];
+      this.jobsCount = this.jobsCount > 6 ? this.jobsCount - 6 : 0;
     }
   }
 
@@ -75,9 +80,8 @@ export class DisplayJobComponent implements OnInit {
       this.displayedJobs = this.alljobs.slice(0, 6);
       this.jobsCount = this.alljobs.length - this.displayedJobs.length;
     } else {
-      // this.searchResultCount = this.searchResult.length - this.displayedJobs.length
       this.displayedJobs = this.searchResult.slice(0, 6);
-      // this.searchResultCount = this.searchResult.length - this.displayedJobs.length;
+      this.jobsCount = this.alljobs.length - this.displayedJobs.length;
     }
   }
 
@@ -117,9 +121,8 @@ export class DisplayJobComponent implements OnInit {
 
   searchResults(filterCondition: (job: Job) => boolean) {
     if (this.alljobs.length) {
-      this.searchResult = this.alljobs.filter(filterCondition);
-      this.searchResultCount = this.searchResult.length;
-      this.displayedJobs = this.searchResult;
+      this.displayedJobs = this.alljobs.filter(filterCondition);
+      this.searchResultCount = this.displayedJobs.length;
     }
   }
 

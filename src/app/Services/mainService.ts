@@ -2,11 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Job } from '../Models/job.interface';
+import {  UserData } from '../Models/userData.interface';
+import { appliedJobs } from '../Shared/Store/AppliedJobs/appliedJobs.state';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GetAvailableJobsService {
+export class MainService {
 
   constructor(private _HttpClient: HttpClient) { }
   wrongApi: string = 'https://api-next.jobsglobal.com:54902/api/v1/jobs/all?page=2';
@@ -24,5 +26,30 @@ export class GetAvailableJobsService {
       })))
     );
   }
+
+
+
+  createDatabase(data: UserData, job: appliedJobs) {
+    let obj = { ...job, ...data };
+    let email = data.email.replaceAll('.', '-');
+    const request = {
+      [email]: {
+        applications: [obj]
+      }
+    };
+    return this._HttpClient.post(`https://joblisting-b302e-default-rtdb.firebaseio.com/${email}/userJobs.json`, request).pipe(
+      map(response => {
+        return {
+          id: job.jobId
+        }
+
+      })
+    )
+  }
+
+
+
+
+
 
 }
