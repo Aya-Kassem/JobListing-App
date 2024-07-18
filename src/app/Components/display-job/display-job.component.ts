@@ -7,13 +7,13 @@ import { Job } from '../../Models/job.interface';
 import { CustomModalComponent } from '../../Shared/Modal/custom-modal.component';
 import { loadJobs } from '../../Shared/Store/Jobs/jobs.actions';
 import { JobsState } from '../../Shared/Store/Jobs/jobs.state';
-import { MoreLessDirective } from '../../Shared/Directives/more-less.directive';
 import { RemoveHyphen } from '../../Shared/Pipes/removeHyphen.pipe';
 import { CapitalizeFirstLetter } from '../../Shared/Pipes/CapitalizeFirstLetter.pipe';
 import { PaginationSatet } from '../../Shared/Store/Pagination/pagination.state';
 import { paginateJobs } from '../../Shared/Store/Pagination/pagination.actions';
 import { searchResult } from '../../Shared/Store/Search/search.actions';
 import { AppToast } from '../../Shared/Toast/toast.component';
+import { SeeMoreLessDirective } from '../../Shared/Directives/more-less.directive';
 
 
 @Component({
@@ -22,7 +22,7 @@ import { AppToast } from '../../Shared/Toast/toast.component';
   imports: [
     CommonModule,
     CustomModalComponent,
-    MoreLessDirective,
+    SeeMoreLessDirective,
     RemoveHyphen,
     CapitalizeFirstLetter,
     AppToast,
@@ -213,7 +213,7 @@ export class DisplayJobComponent implements OnInit {
     this.displayedJobs = slicedJobs;
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.subscription.unsubscribe();
   }
 }

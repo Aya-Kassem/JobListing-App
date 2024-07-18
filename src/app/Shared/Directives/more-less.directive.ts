@@ -1,17 +1,18 @@
 import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
-
 @Directive({
-    standalone: true,
     selector: '[seeMoreLess]',
+    standalone: true
 })
-export class MoreLessDirective {
+
+export class SeeMoreLessDirective {
     shortText!: string;
     toggleLink!: HTMLElement;
     fullDescription!: string;
     isExpanded: boolean = false;
 
-    constructor(private _ElementRef: ElementRef, private _Renderer2: Renderer2) {}
-    ngOnInit() {
+    constructor(private _ElementRef: ElementRef, private _Renderer2: Renderer2) { }
+    ngAfterViewInit() {
+        console.log(this._ElementRef.nativeElement.innerText);
         this.fullDescription = this._ElementRef.nativeElement.innerText;
         const descriptionArray = this.fullDescription.split(' ');
         if (descriptionArray.length > 4) {
@@ -28,8 +29,7 @@ export class MoreLessDirective {
         this._Renderer2.setStyle(this.toggleLink, 'font-weight', 'bold');
         this.changeLinkText(' See More')
     }
-
-    changeLinkText(text: string){
+    changeLinkText(text: string) {
         this._Renderer2.setProperty(this.toggleLink, 'innerText', text);
         this._Renderer2.appendChild(this._ElementRef.nativeElement, this.toggleLink);
     }
@@ -46,8 +46,6 @@ export class MoreLessDirective {
             this.changeLinkText(' See Less');
         }
     }
-
 }
-
 
 
