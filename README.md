@@ -16,6 +16,7 @@ This project is a simple JobListing application built with Angular 17;
 - PrimeNG 17
 - LocalStorage
 - NgRx
+- Firebase Real Time Database
 
 ##  App Demo
 WILL BE PROVIDED....
