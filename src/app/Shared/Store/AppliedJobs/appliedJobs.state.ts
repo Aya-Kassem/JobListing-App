@@ -1,7 +1,7 @@
 export interface appliedJobs {
   jobId: string;
   isApplied: boolean;
-  loading?: boolean;
+  submitStatus?: boolean;
   Errortext?: string,
   saveJob?: boolean
 }
@@ -9,5 +9,6 @@ export interface appliedJobs {
 export const initialState: appliedJobs = {
   jobId: '',
   isApplied: false,
-  loading: false
+  submitStatus: true,
+  Errortext: ''
 };

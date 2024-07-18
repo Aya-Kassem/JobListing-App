@@ -25,3 +25,65 @@
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
 }
+
+/* Toast Style */
+.p-toast .p-toast-message.p-toast-message-success .p-toast-message-icon {
+    display: none !important;
+}
+
+.p-toast .p-toast-message .p-toast-message-content {
+    padding: 0;
+    align-items: center !important;
+}
+
+.p-toast .p-toast-message .p-toast-message-content .p-toast-detail {
+    margin: 0;
+}
+
+.p-toast .p-toast-message .p-toast-message-content .p-toast-message-text {
+    margin: 0 1rem 0 1rem;
+}
+
+.p-toast-top-right {
+    top: 10px !important;
+    right: 10px !important;
+}
+
+.p-toast {
+    width: fit-content !important;
+}
+
+p-toast>div>p-toastitem>div {
+    display: flex;
+    align-items: center;
+    height: 50px;
+}
+
+.notification {
+    p-toast>div>p-toastitem>div {
+        color: #987070 !important;
+        border-left: 6px solid #987070 !important;
+        background-color: #F8EDE3 !important;
+    }
+
+    .p-toast .p-toast-message.p-toast-message-success .p-toast-icon-close {
+        display: none !important;
+    }
+}
+
+.error {
+    p-toast>div>p-toastitem>div {
+        color: #000 !important;
+        border-left: 6px solid rgb(220, 53, 69) !important;
+        background-color: rgba(220, 53, 69, 0.3)  !important;
+    }
+
+    .p-toast .p-toast-message.p-toast-message-success .p-toast-icon-close {
+        color: rgb(220, 53, 69) !important;
+        padding-right: 2px;
+    }
+
+    .p-toast .p-toast-message .p-toast-icon-close:focus {
+        box-shadow: none !important
+    }
+}

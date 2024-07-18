@@ -1,4 +1,3 @@
-// jobs.reducer.ts
 import { createReducer, on } from '@ngrx/store';
 import { loadJobs, loadJobsSuccess, loadJobsFailed } from './jobs.actions';
 import { JobsState } from './jobs.state'

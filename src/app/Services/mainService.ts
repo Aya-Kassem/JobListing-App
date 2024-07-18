@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { Job } from '../Models/job.interface';
 import {  UserData } from '../Models/userData.interface';
 import { appliedJobs } from '../Shared/Store/AppliedJobs/appliedJobs.state';
@@ -23,13 +23,16 @@ export class MainService {
         description: JSON.parse(job.work_space_meta_data).job_group_name,
         company: job.page.name,
         incremental_id: job.incremental_id
-      })))
+      }))),catchError(error => {
+        console.error('Error fetching jobs:', error);
+        return throwError(() => new Error('Failed to fetch jobs, please try again later.'));
+      })
     );
   }
 
 
 
-  createDatabase(data: UserData, job: appliedJobs) {
+  SubmitJobApplication(data: UserData, job: appliedJobs) {
     let obj = { ...job, ...data };
     let email = data.email.replaceAll('.', '-');
     const request = {
@@ -41,9 +44,10 @@ export class MainService {
       map(response => {
         return {
           id: job.jobId
-        }
-
-      })
+        }}),catchError(error => {
+          console.error('Error Saving Data:', error);
+          return throwError(() => new Error('Failed to Submit Your Application, please try again later.'));
+        })
     )
   }
 

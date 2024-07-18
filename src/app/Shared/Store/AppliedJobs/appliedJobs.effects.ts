@@ -11,16 +11,16 @@ export class ApplyingJobsEffects {
         this.actions$.pipe(
             ofType(submitApplication),
             mergeMap(action =>
-                this.mainService.createDatabase(action.userData, action.jobData).pipe(
+                this.mainService.SubmitJobApplication(action.userData, action.jobData).pipe(
                     map(({ id }) => {
                         const storedJobs = JSON.parse(localStorage.getItem('Jobs') || '[]');
                         if (!storedJobs.includes(id)) {
                           storedJobs.push(id);
                           localStorage.setItem('Jobs', JSON.stringify(storedJobs));
                         }
-                        return submitApplicationSuccess({ id });
+                        return submitApplicationSuccess({ id, submitStatus: true });
                       }),
-                    catchError(error => of(submitApplicationFailure({ error })))
+                    catchError(err => of(submitApplicationFailure({ Errortext: err.message, submitStatus: false })))
                 )
             )
         )

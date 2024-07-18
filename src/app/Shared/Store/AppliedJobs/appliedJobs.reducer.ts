@@ -1,23 +1,26 @@
 import { createReducer, on } from '@ngrx/store';
-import * as JobActions from '../AppliedJobs/appliedJobs.actions';
+import {submitApplication, submitApplicationSuccess, submitApplicationFailure} from '../AppliedJobs/appliedJobs.actions';
 import { initialState } from './appliedJobs.state'
 
 export const appliedJobsReducer = createReducer(
   initialState,
-  on(JobActions.submitApplication, state => ({
+  on(submitApplication, state => ({
     ...state,
     isApplied: false,
     jobId: ''
   })),
-  on(JobActions.submitApplicationSuccess, (state, { id }) => ({
+  on(submitApplicationSuccess, (state, { id, submitStatus }) => ({
     ...state,
     isApplied: true,
-    jobId: id
+    jobId: id,
+    submitStatus
   })),
-  on(JobActions.submitApplicationFailure, (state, { error }) => ({
+  on(submitApplicationFailure, (state, { Errortext, submitStatus }) => ({
     ...state,
     isApplied: true,
     jobId: '',
-    Errortext: state.Errortext
+    Errortext,
+    submitStatus
   }))
 );
+

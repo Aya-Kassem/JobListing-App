@@ -1,8 +1,7 @@
-// display-job.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { searchJob } from '../../Models/search.interface';
 import { Job } from '../../Models/job.interface';
 import { CustomModalComponent } from '../../Shared/Modal/custom-modal.component';
@@ -14,6 +13,7 @@ import { CapitalizeFirstLetter } from '../../Shared/Pipes/CapitalizeFirstLetter.
 import { PaginationSatet } from '../../Shared/Store/Pagination/pagination.state';
 import { paginateJobs } from '../../Shared/Store/Pagination/pagination.actions';
 import { searchResult } from '../../Shared/Store/Search/search.actions';
+import { AppToast } from '../../Shared/Toast/toast.component';
 
 
 @Component({
@@ -25,11 +25,13 @@ import { searchResult } from '../../Shared/Store/Search/search.actions';
     MoreLessDirective,
     RemoveHyphen,
     CapitalizeFirstLetter,
+    AppToast,
     DatePipe],
   templateUrl: './display-job.component.html',
   styleUrl: './display-job.component.css'
 })
 export class DisplayJobComponent implements OnInit {
+  subscription!: Subscription;
   alljobs: Job[] = [];
   displayedJobs: Job[] = [];
   searchResult: Job[] = [];
@@ -48,10 +50,14 @@ export class DisplayJobComponent implements OnInit {
   currentPage!: number;
   pageSize!: number;
   jobs$: Observable<Job[]> = this._Store.select(state => state.Jobs.jobs);
-  loading$: Observable<boolean> = this._Store.select(state => state.Jobs.loading);
   error$: Observable<any> = this._Store.select(state => state.Jobs.Errortext);
+
   displayedJobs$!: Observable<Job[]>;
   filteredJobs!: Job[];
+  fetchErr!: boolean;
+  noResult!: boolean;
+  errMsg!: string;
+
   constructor(
     private _Store: Store<{ Title: string, Location: string, Jobs: JobsState, Pagination: PaginationSatet, searchResult: Job[] }>
   ) {
@@ -66,10 +72,11 @@ export class DisplayJobComponent implements OnInit {
     );
 
 
-    this.currentPage$.subscribe((value) => {
+    this.subscription = this.currentPage$.subscribe((value) => {
       this.currentPage = value;
     });
-    this.pageSize$.subscribe((value) => {
+
+    this.subscription = this.pageSize$.subscribe((value) => {
       this.pageSize = value;
     });
 
@@ -82,26 +89,36 @@ export class DisplayJobComponent implements OnInit {
     this.getUserInputForLocation();
     this._Store.dispatch(loadJobs());
     this.getAllJobs();
-
+    this.checkError();
   }
 
   getTotalPagesCount() {
-    this._Store.select('searchResult').subscribe((data) => {
+    this.subscription = this._Store.select('searchResult').subscribe((data) => {
       this.totalPages = Math.ceil(data.length / 6)
     })
   }
 
   getAllJobs() {
-    this.jobs$.subscribe(jobs => {
+    this.subscription = this.jobs$.subscribe(jobs => {
       this._Store.dispatch(searchResult({ jobs: jobs }));
       this.alljobs = jobs;
       this.jobsCount = jobs.length;
+      if (jobs.length === 0) {
+        this.noResult = true
+      }
       this.setDisplayedJobs();
     });
   }
 
+  checkError() {
+    this.subscription = this.error$.subscribe((err) => {
+      this.fetchErr = true;
+      this.errMsg = err;
+    })
+  }
+
   setDisplayedJobs() {
-    this._Store.select('searchResult').subscribe((data) => {
+    this.subscription = this._Store.select('searchResult').subscribe((data) => {
       this.displayedJobs = data.slice(0, 6);
       this.jobsCount = this.jobsCount - 6;
     })
@@ -109,27 +126,26 @@ export class DisplayJobComponent implements OnInit {
 
   getUserInputForTitle() {
     this.title$ = this._Store.select('Title');
-    this.title$.subscribe((jobTitle) => {
+    this.subscription = this.title$.subscribe((jobTitle) => {
       if (jobTitle != '') {
         this.getJobBySearchParam({ title: jobTitle });
-      } else {
-        this._Store.dispatch(searchResult({ jobs: this.alljobs }));
-        this.setDisplayedJobs();
-        this.userSearch = false;
-      }
+      } else this.defaultDataAfterSearch();
     });
+  }
+
+  defaultDataAfterSearch() {
+    this._Store.dispatch(searchResult({ jobs: this.alljobs }));
+    this.setDisplayedJobs();
+    this.userSearch = false;
+    this.noResult = false;
   }
 
   getUserInputForLocation() {
     this.location$ = this._Store.select('Location');
-    this.location$.subscribe((jobLocation) => {
+    this.subscription = this.location$.subscribe((jobLocation) => {
       if (jobLocation != '') {
         this.getJobBySearchParam({ location: jobLocation });
-      } else {
-        this._Store.dispatch(searchResult({ jobs: this.alljobs }));
-        this.setDisplayedJobs();
-        this.userSearch = false;
-      }
+      } else this.defaultDataAfterSearch();
     });
   }
 
@@ -146,6 +162,9 @@ export class DisplayJobComponent implements OnInit {
   searchResults(filterCondition: (job: Job) => boolean) {
     if (this.alljobs.length) {
       this.filteredJobs = this.alljobs.filter(filterCondition);
+      if (this.filteredJobs.length === 0) {
+        this.noResult = true;
+      }
       this._Store.dispatch(searchResult({ jobs: this.filteredJobs }));
       this.setDisplayedJobs();
     }
@@ -192,6 +211,10 @@ export class DisplayJobComponent implements OnInit {
     const endIndex = startIndex + this.pageSize;
     const slicedJobs = dispatchdJobs.slice(startIndex, endIndex);
     this.displayedJobs = slicedJobs;
+  }
+
+  ngOnDestroy(){
+    this.subscription.unsubscribe();
   }
 }
 

@@ -1,0 +1,6 @@
+<div class="notification" *ngIf="type === 'notification' " >
+    <p-toast styleClass="custom-toast" (onClose)="toastEnded()"></p-toast>
+</div>
+<div class="error" *ngIf="type === 'error' " >
+    <p-toast></p-toast>
+</div>

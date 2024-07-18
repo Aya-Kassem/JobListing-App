@@ -9,7 +9,7 @@ export class MoreLessDirective {
     toggleLink!: HTMLElement;
     fullDescription!: string;
     isExpanded: boolean = false;
-    
+
     constructor(private _ElementRef: ElementRef, private _Renderer2: Renderer2) {}
     ngOnInit() {
         this.fullDescription = this._ElementRef.nativeElement.innerText;
@@ -48,3 +48,6 @@ export class MoreLessDirective {
     }
 
 }
+
+
+

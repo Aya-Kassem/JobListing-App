@@ -9,10 +9,10 @@ export const submitApplication = createAction(
 
 export const submitApplicationSuccess = createAction(
   '[Job] Submit Application Success',
-  props<{ id: string }>()
+  props<{ id: string, submitStatus: boolean }>()
 );
 
 export const submitApplicationFailure = createAction(
   '[Job] Submit Application Failure',
-  props<{ error: any }>()
+  props<{ Errortext: any, submitStatus: boolean }>()
 );

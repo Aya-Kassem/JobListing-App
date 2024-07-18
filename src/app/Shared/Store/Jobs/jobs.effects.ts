@@ -14,7 +14,7 @@ export class JobsEffect {
             exhaustMap(() =>
                 this._MainService.fetchAllJobs().pipe(
                     map(jobs => loadJobsSuccess({ jobs })),
-                    catchError(error => of(loadJobsFailed({ Errortext: error })))
+                    catchError(error => of(loadJobsFailed({ Errortext: error.message })))
                 )
             )
         )
