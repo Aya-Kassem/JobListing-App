@@ -6,11 +6,12 @@ import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
-import { searchByTitleReducer, searchByLocationReducer } from './Shared/Store/Search/search.reducer';
+import { searchByTitleReducer, searchByLocationReducer, userSearchResultReducer } from './Shared/Store/Search/search.reducer';
 import { JobsEffect } from './Shared/Store/Jobs/jobs.effects';
 import { jobsReducer } from './Shared/Store/Jobs/jobs.reducer';
 import { appliedJobsReducer } from './Shared/Store/AppliedJobs/appliedJobs.reducer';
 import { ApplyingJobsEffects } from './Shared/Store/AppliedJobs/appliedJobs.effects';
+import { PaginationReducer } from './Shared/Store/Pagination/pagination.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +22,9 @@ export const appConfig: ApplicationConfig = {
       Title: searchByTitleReducer,
       Location: searchByLocationReducer,
       Jobs: jobsReducer,
-      AppliedJobs: appliedJobsReducer
+      AppliedJobs: appliedJobsReducer,
+      Pagination: PaginationReducer,
+      searchResult: userSearchResultReducer
     }), 
     provideEffects(JobsEffect, ApplyingJobsEffects)]
 };

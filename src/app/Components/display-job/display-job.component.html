@@ -48,14 +48,13 @@
     <!-- Load More / Load Less buttons -->
     <div class="flex justify-center mt-4 space-x-4">
         <button
-            [ngClass]="{'bg-disableBtn text-disableBtn cursor-disableBtn' : jobsCount === 0 }"
-            class="bg-default text-white font-bold py-2 px-4 rounded-full" (click)="loadMore()">
+            [ngClass]="{'bg-disableBtn text-disableBtn cursor-disableBtn' : currentPage === totalPages }"
+            class="bg-default text-white font-bold py-2 px-4 rounded-full" (click)="goToNextPage()">
             Next
         </button>
-        <button [ngClass]="{'bg-disableBtn text-disableBtn cursor-disableBtn' : jobsCount != 0 }"
-            class="bg-default text-white font-bold py-2 px-4 rounded-full" (click)="loadLess()">
+        <button [ngClass]="{'bg-disableBtn text-disableBtn cursor-disableBtn' : currentPage === 1 }"
+            class="bg-default text-white font-bold py-2 px-4 rounded-full" (click)="goToPreviousPage()">
             Prev
         </button>
     </div>
-
 </div>
